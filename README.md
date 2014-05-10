@@ -1,2 +1,3 @@
 ## Packaged Cloud9
-TODO: Package cloud9 in a desktop app using node-webkit.
+Goal: Package [cloud9](https://github.com/ajaxorg/cloud9) in a desktop app using [node-webkit](https://github.com/rogerwang/node-webkit).
+<img src="doc/img/shot.png">

@@ -1,12 +1,12 @@
 {
     "name": "pCloud9",
     "version": "0.0.1",
-    "main": "index.html",
+    "main": "http://localhost:3131",
     "description": "Cloud9 IDE - The modern IDE built on Node, JavaScript and HTML5",
     "window": {
-        "title": "Cloud9",
+        "title": "Cloud9 IDE - The modern IDE built on Node, JavaScript and HTML5",
         "icon": "link.png",
-        "toolbar": true,
+        "toolbar": false,
         "frame": true,
         "width": 800,
         "height": 500,

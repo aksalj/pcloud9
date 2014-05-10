@@ -2,39 +2,36 @@
 
 var fs = require('fs');
 var path = require('path');
-var spawn = require('child_process').exec;
+var child = require('child_process');
 
 var log = function (msg) {
     console.log(msg);
     $("#log").append("<span>" + msg + "<span></span><br>");
 };
 
-var startCloud9 = function (callback) {
-    var windows = /^win/.test(process.platform);
-    var cmd = windows ? "node cloud9/server.js" : "cloud9/bin/cloud9.sh";
-    var c9 = spawn(cmd);
+/*var startCloud9 = function (callback) {
+    var platform = process.platform, cmd = "/usr/local/bin/node", params = ["./cloud9/server.js", "-a"];
+    if (/win/.test(platform) || /darwin/.test(platform)) {
+        params.push('open');
+    } else if (/linux/.test(platform)) {
+        params.push("x-www-browser");
+    }
 
-    c9.stdout.on('data', function (data) {
-        log('stdout: ' + data);
-        callback(null, data);
-    });
+    var out = fs.openSync('./runtime/out.log', 'a');
+    var err = fs.openSync('./runtime/out.log', 'a');
 
-    c9.stderr.on('data', function (data) {
-        log('stderr: ' + data);
-        callback(new Error('Cloud9 Error'), data);
-    });
+    var cp = child.spawn(cmd, params, { detached: true, stdio: [ 'ignore', out, err ] });
 
-    c9.on('close', function (code) {
-        log('child process exited with code ' + code);
-        callback(code);
-    });
+    cp.unref();
+
+    callback();
 
 };
 
-$( document ).ready(function() {
-    console.log( "ready!" );
+$(document).ready(function () {
 
     startCloud9(function (err, data) {
-
+        window.location = "http://localhost:3131";
     });
-});
+
+});*/
