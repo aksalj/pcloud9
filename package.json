@@ -1,0 +1,8 @@
+{
+  "name": "pCloud9",
+  "description": "Packaged Cloud9 IDE - The modern IDE built on Node, JavaScript and HTML5",
+  "devDependencies": {
+    "grunt": "latest",
+    "grunt-node-webkit-builder": "latest"
+  }
+}

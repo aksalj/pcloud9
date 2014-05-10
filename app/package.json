@@ -1,0 +1,22 @@
+{
+    "name": "pCloud9",
+    "version": "0.0.1",
+    "main": "index.html",
+    "description": "Cloud9 IDE - The modern IDE built on Node, JavaScript and HTML5",
+    "window": {
+        "title": "Cloud9",
+        "icon": "link.png",
+        "toolbar": true,
+        "frame": true,
+        "width": 800,
+        "height": 500,
+        "position": "center"
+    },
+    "single-instance": true,
+    "webkit": {
+        "plugin": true
+    },
+    "dependencies":{
+        "path":"x.x.x"
+    }
+}
