@@ -1,10 +1,9 @@
 #!/bin/sh
 
-CMD="$(readlink $0)"
-CMD_DIR=`dirname "$CMD"`
-cd "$CMD_DIR/.."
+ME=`readlink "$0" || echo "$0"`
+cd `dirname "$ME"`/..
 
-make update
+make worker
 
 case `uname -a` in
 Linux*x86_64*)  echo "Linux 64 bit"

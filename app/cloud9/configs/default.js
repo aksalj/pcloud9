@@ -1,3 +1,7 @@
+/*global require process module __dirname*/
+/**
+ * Default/vanilla Cloud9 ("OS") configuration.
+ */
 "use strict";
 
 var fs = require("fs");
@@ -21,20 +25,17 @@ var vfsUrl = "/vfs";
 
 var port = argv.p || process.env.PORT || 3131;
 var host = argv.l || process.env.IP || "localhost";
+var debugPort = argv.b || process.env.DEBUG_PORT || 5858;
 
 var useAuth = argv.username && argv.password;
 
 var config = [
     {
-        packagePath: "connect-architect/connect",
+        packagePath: "./connect",
         port: port,
         host: host
     }, {
-        packagePath: "./cloud9.sourcemint",
-        prefix: "/static/bundles",
-        plugins: clientExtensions
-    }, {
-        packagePath: "connect-architect/connect.static",
+        packagePath: "./connect.static",
         prefix: "/static"
     },
     "./cloud9.alive",
@@ -47,10 +48,10 @@ var config = [
     "./../plugins-client/lib.treehugger",
     "./../plugins-client/lib.v8debug",
     "./../plugins-client/lib.requirejs",
+    "./c9.smith.io",
     {
-        packagePath: "smith.io/server-plugin",
-        messagePath: "/smith.io/server",
-        debug: true
+        packagePath: "./c9.smith.io.ide",
+        messageRegex: /(\/smith.io-ide)/
     },
     // server plugins
     {
@@ -66,7 +67,7 @@ var config = [
         fsUrl: fsUrl,
         smithIo: {
             port: port,
-            prefix: "/smith.io/server"
+            prefix: "/smith.io-ide"
         },
         hosted: false,
         bundledPlugins: [
@@ -96,7 +97,8 @@ var config = [
             "ext/quickwatch/quickwatch",
             "ext/gotoline/gotoline",
             "ext/preview/preview",
-            "ext/log/log",
+            // "ext/deploy/deploy",
+            //"ext/log/log",
             "ext/help/help",
             "ext/linereport/linereport",
             "ext/linereport_php/linereport_php",
@@ -148,7 +150,6 @@ var config = [
             "ext/revisions/revisions",
             "ext/language/liveinspect",
             "ext/splitview/splitview"
-            //"ext/minimap/minimap"
         ]
     }, {
         packagePath: "vfs-architect/local",
@@ -161,15 +162,19 @@ var config = [
         packagePath: "./cloud9.fs",
         urlPrefix: fsUrl
     },
-    "./cloud9.socket",
     {
-        packagePath: "connect-architect/connect.session",
+        packagePath: "./cloud9.socket",
+        socketPath: "/smith.io-ide"
+    },
+    {
+        packagePath: "./connect.session",
         key: "cloud9.sid." + port,
         secret: "v1234"
     },
     {
-        packagePath: "connect-architect/connect.session.file",
-        sessionsPath: __dirname + "/../.sessions"
+        packagePath: "./connect.session.file",
+        sessionsPath: __dirname + "/../.sessions",
+        maxAge: 7 * 24 * 60 * 60 * 1000
     },
     "./cloud9.permissions",
     {
@@ -186,7 +191,8 @@ var config = [
     },
     {
         packagePath: "./cloud9.run.node-debug",
-        listenHint: "Important: in your scripts, use 'process.env.PORT' as port and '0.0.0.0' as host."
+        listenHint: "Important: in your scripts, use 'process.env.PORT' as port and '0.0.0.0' as host.",
+        debugPort: debugPort
     },
     "./cloud9.run.npm",
     "./cloud9.run.npmnode",
@@ -194,7 +200,6 @@ var config = [
     "./cloud9.run.python",
     "./cloud9.run.apache",
     "./cloud9.run.php",
-    "./cloud9.run.other",
     "architect/plugins/architect.log",
     "./cloud9.ide.auth",
     "./cloud9.ide.git",
@@ -212,7 +217,6 @@ var config = [
     "./cloud9.ide.run-apache",
     "./cloud9.ide.run-ruby",
     "./cloud9.ide.run-php",
-    "./cloud9.ide.run-other",
     "./cloud9.run.python",
     "./cloud9.ide.revisions",
     {
@@ -221,7 +225,7 @@ var config = [
     },
     "./cloud9.ide.shell",
     "./cloud9.ide.state",
-    "./cloud9.ide.watcher",
+    "./cloud9.ide.watcher"
 ];
 
 if (useAuth) {

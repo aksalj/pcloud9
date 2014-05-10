@@ -15,27 +15,39 @@ if (configName.indexOf("-") === 0) {
    configName = "default";
 }
 
+// If a password is given as a command line parameter, we hide it
+// in the title of the process instead of displaying it in plain
+// text.
+var title_parts = process.argv.slice();
+title_parts.forEach(function(element, index, array) {
+  if (element === '--password') {
+    array[index+1] = 'xxxxxxxx';
+  }
+});
+process.title = title_parts.join(' ');
+
 var debug = false;
 var packed = false;
 var packedName = "";
+var exists = fs.existsSync || path.existsSync;
 
 for (var p = 2; p < process.argv.length; p++) {
    if (process.argv[p] === "-d") {
        debug = true;
-       
+
        // apf debug doesn't exist, or it's older than three days--rebuild it
-       if(!path.existsSync("plugins-client/lib.apf/www/apf-packaged/apf_debug.js") ||
-          (path.existsSync("plugins-client/lib.apf/www/apf-packaged/apf_debug.js")) &&
+       if(!exists("plugins-client/lib.apf/www/apf-packaged/apf_debug.js") ||
+          (exists("plugins-client/lib.apf/www/apf-packaged/apf_debug.js")) &&
           ((new Date() - fs.statSync("plugins-client/lib.apf/www/apf-packaged/apf_debug.js").mtime.valueOf()) / 86400000) >= 3) {
            console.log("Building apfdebug for first run...");
-           
+
            var buildDebug = spawn("npm", ["run-script", "build-debug"]);
-           
+
            buildDebug.stderr.setEncoding("utf8");
            buildDebug.stderr.on('data', function (data) {
               console.error(data);
            });
-           
+
            buildDebug.on('exit', function (code) {
               if (code !== 0) {
                 console.error('build-debug process exited with code ' + code);
@@ -57,7 +69,7 @@ for (var p = 2; p < process.argv.length; p++) {
 
        configName = "packed";
 
-       if(!path.existsSync("plugins-client/lib.packed/www/" + packedName) && !path.existsSync("plugins-client/lib.packed/www/" + packedName + ".gz")) {
+       if(!exists("plugins-client/lib.packed/www/" + packedName) && !exists("plugins-client/lib.packed/www/" + packedName + ".gz")) {
            console.log("Building packed file for first run...Please wait...");
            console.log("   |\\      _,,,---,,_\n" +
                        "   /,`.-'`'    -.  ;-;;,_\n" +
@@ -65,7 +77,7 @@ for (var p = 2; p < process.argv.length; p++) {
                        "   '---''(_/--'  `-'\\_)  Felix Lee");
 
             var buildPackage = spawn("npm", ["run-script", "build-packed"]);
-            
+
             buildPackage.stderr.setEncoding("utf8");
             buildPackage.stderr.on('data', function (data) {
               console.error(data);

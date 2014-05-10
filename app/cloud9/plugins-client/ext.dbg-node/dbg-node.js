@@ -135,6 +135,8 @@ oop.inherits(v8DebugClient, DebugHandler);
         if (!frame || !this.$v8dbg)
             return callback();
         var bp = remoteBreakpoints[0];
+        if (!bp)
+            return this.resume(null, null, callback);
         if (bp.number !== 1)
             return callback();
 
@@ -326,7 +328,7 @@ oop.inherits(v8DebugClient, DebugHandler);
             id: getId(frame),
             ref: frame.ref,
             line: frame.line,
-            script: this.$strip(script.name),
+            script: this.$strip(script.name || "anonymous"),
             scriptPath: this.getLocalScriptPath(script),
             scriptid: frame.func.scriptId //script.id,
         }, true));

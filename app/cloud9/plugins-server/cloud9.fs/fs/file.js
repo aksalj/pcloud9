@@ -1,9 +1,9 @@
 "use strict";
 
-var jsDAV_FS_Node   = require("./node").jsDAV_FS_Node;
-var jsDAV_iFile     = require("jsDAV/lib/DAV/iFile").jsDAV_iFile;
-
-var Util            = require("jsDAV/lib/DAV/util");
+var jsDAV_FS_Node = require("./node").jsDAV_FS_Node;
+var jsDAV_iFile = require("jsDAV/lib/DAV/iFile").jsDAV_iFile;
+var Exc = require("jsDAV/lib/DAV/exceptions");
+var Util = require("jsDAV/lib/DAV/util");
 
 function jsDAV_FS_File(vfs, path, stat) {
     this.vfs = vfs;
@@ -29,7 +29,7 @@ require("util").inherits(jsDAV_FS_File, jsDAV_FS_Node);
         var path = this.path;
         // is it a chunked upload?
         var size = handler.httpRequest.headers["x-file-size"];
-        if (size) {
+        if (size && size !== "undefined") {
             var parts = Util.splitPath(this.path);
             if (!handler.httpRequest.headers["x-file-name"])
                 handler.httpRequest.headers["x-file-name"] = parts[1];
@@ -41,10 +41,12 @@ require("util").inherits(jsDAV_FS_File, jsDAV_FS_Node);
             });
         }
         else {
-
             this.vfs.mkfile(path, {}, function(err, meta) {
-                if (err)
+                if (err) {
+                    if (err.code == "EACCES")
+                        err = new Exc.jsDAV_Exception_Forbidden("Permission denied to write file:" + path);
                     return callback(err);
+                }
 
                 handler.getRequestBody(type, meta.stream, callback);
             });
