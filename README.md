@@ -1,2 +1,2 @@
 ## Packaged Cloud9
-Goal: Package cloud9 as a desktop app using node-webkit
+TODO: Package cloud9 in a desktop app using node-webkit.
