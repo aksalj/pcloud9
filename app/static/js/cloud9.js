@@ -4,12 +4,14 @@ var fs = require('fs');
 var path = require('path');
 var child = require('child_process');
 
+var IDE_URL = "http://localhost:3131";
+
 var log = function (msg) {
     console.log(msg);
-    $("#log").append("<span>" + msg + "<span></span><br>");
+    $("#log").append("" + msg);
 };
 
-/*var startCloud9 = function (callback) {
+var startCloud9 = function (onStarted, onError, onExit) {
     var platform = process.platform, cmd = "/usr/local/bin/node", params = ["./cloud9/server.js", "-a"];
     if (/win/.test(platform) || /darwin/.test(platform)) {
         params.push('open');
@@ -17,21 +19,54 @@ var log = function (msg) {
         params.push("x-www-browser");
     }
 
-    var out = fs.openSync('./runtime/out.log', 'a');
-    var err = fs.openSync('./runtime/out.log', 'a');
+    var cp = child.spawn(cmd, params);
+    cp.stdout.on('data', function (data) {
+        var str = data.toString();
+        log(data);
+        if (str.indexOf("Listening on") > -1) {
+            onStarted();
+        }
+    });
 
-    var cp = child.spawn(cmd, params, { detached: true, stdio: [ 'ignore', out, err ] });
-
-    cp.unref();
-
-    callback();
+    cp.stderr.on('data', onError);
+    //cp.on('exit', onExit);
+    cp.on('close', onExit);
+    //cp.on('error', onError);
 
 };
 
-$(document).ready(function () {
-
-    startCloud9(function (err, data) {
-        window.location = "http://localhost:3131";
+var hideFrame = function (callback) {
+    $('#frame').hide(function () {
+        if (callback) {
+            callback();
+        }
     });
+};
 
-});*/
+var showFrame = function (callback) {
+    $('#frame').show(function () {
+        if (callback) {
+            callback();
+        }
+    });
+};
+
+var init = function () {
+    showFrame(function () {
+        $("#frame").attr('src', IDE_URL);
+    });
+};
+
+var error = function (message) {
+    log(message);
+    //hideFrame();
+};
+
+var exit = function (code) {
+    log("IDE exit: " + code);
+    hideFrame();
+};
+
+$(document).ready(function () {
+    startCloud9(init, error, exit);
+});

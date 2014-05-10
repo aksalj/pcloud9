@@ -1,0 +1,15 @@
+body {
+    scrolling:no;
+}
+#log{
+    padding: 5px;
+    background-color: lightgrey;
+    border-radius: 4px;
+}
+
+iframe {
+    position:absolute;
+    z-index:1;
+    top:0px;
+    left:0px;
+}
