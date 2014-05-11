@@ -1,10 +1,11 @@
 "use strict";
 
 var fs = require('fs');
-var path = require('path');
+var path = require('path-extra');
 var child = require('child_process');
 
 var IDE_URL = "http://localhost:3131";
+var WORKSPACE = path.homedir();
 
 var log = function (msg) {
     console.log(msg);
@@ -12,7 +13,7 @@ var log = function (msg) {
 };
 
 var startCloud9 = function (onStarted, onError, onExit) {
-    var platform = process.platform, cmd = "/usr/local/bin/node", params = ["./cloud9/server.js", "-a"];
+    var platform = process.platform, cmd = "/usr/local/bin/node", params = ["./cloud9/server.js", "-w", WORKSPACE, "-a"];
     if (/win/.test(platform) || /darwin/.test(platform)) {
         params.push('open');
     } else if (/linux/.test(platform)) {
@@ -64,7 +65,7 @@ var error = function (message) {
 
 var exit = function (code) {
     log("IDE exit: " + code);
-    hideFrame();
+    //hideFrame();
 };
 
 $(document).ready(function () {

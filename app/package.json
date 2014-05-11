@@ -17,6 +17,6 @@
         "plugin": true
     },
     "dependencies":{
-        "path":"x.x.x"
+        "path-extra":"x.x.x"
     }
 }

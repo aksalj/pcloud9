@@ -7,8 +7,8 @@ module.exports = function (grunt) {
                 credits: './app/credits.html',
                 mac_icns: './app/icon.icns', // Path to the Mac icon file
                 mac: true,
-                win: true,
-                linux32: true,
+                win: false,
+                linux32: false,
                 linux64: false
             },
             src: './app/**/*' // node-webkit app
